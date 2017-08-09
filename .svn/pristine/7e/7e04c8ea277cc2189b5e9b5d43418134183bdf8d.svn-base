@@ -1,0 +1,12 @@
+Merge branch 'master' of https://github.com/Lorenlei/Hichat
+
+# Conflicts:
+#	src/components/common/loadmore.vue
+#	src/components/common/portraitCard.vue
+#	src/components/friends/friends.vue
+#	src/components/group/group.vue
+#	src/components/msg/search/search-window.vue
+#	src/components/msg/search/search-window2.vue
+#	src/components/recent/recent.vue
+#	src/components/recent/recent2.vue
+#	src/main.js

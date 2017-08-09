@@ -1,0 +1,26 @@
+<?php 
+use \ Framework\Controller\BaseController;
+use \ Framework\Model\DbForge;
+use \ Framework\Util\Input;
+class Recent extends BaseController
+{
+	function __construct()
+    {
+        parent::__construct();
+    }
+    function Welcome()
+    {
+        parent::__construct();  
+        
+    }
+    function index()
+    {
+        $forege = new DbForge();
+        //($table,$prefix,$modelName,$mod
+        $forege->createModel('friend','tb','iFriendId','friend','user');
+        //echo '<hr>';($table,$prefix,$modelName,$controllerName,$mod)
+        $forege->createController('friend','tb','friend','friend','user');
+        
+    }
+
+}

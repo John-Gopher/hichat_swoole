@@ -1,0 +1,57 @@
+<?php
+namespace  Application\User\Model;
+use \Framework\Model\BaseModel;
+class GroupModel extends BaseModel
+{
+    var $table  = 'tbgroup';
+    var $prikey = 'iUserId';
+    var $_name  = 'group';
+
+    var $_autov = array(
+        
+             'iGroupId' => array(
+                'required'  => true,
+                'min' => 1,
+                'min' => 1,
+                'type' => 'Number',
+             ),
+
+             'sGroupName' => array(
+                'required'  => true,'min' => 1,'type' => 'String','max' => 60,
+             ),
+
+             'sRemark' => array(
+                'required'  => true,'min' => 1,'type' => 'String','max' => 255,
+             ),
+
+             'iCreatorId' => array(
+                'required'  => true,
+                'min' => 1,
+                'min' => 1,
+                'type' => 'Number',
+             ),
+
+             'iNumMember' => array(
+                'required'  => true,
+                'min' => 1,
+                'min' => 1,
+                'type' => 'Number',
+             ),
+
+             'dtLastActiveTime' => array(
+                'required'  => true,
+             ),
+
+             'sMembers' => array(
+                'required'  => true,'min' => 1,'type' => 'String','max' => 500,
+             ),
+
+             'iStatus' => array(
+                'required'  => true,
+                'min' => -128,
+                'min' => -128,
+                'type' => 'Number',
+             ),
+
+    );
+}

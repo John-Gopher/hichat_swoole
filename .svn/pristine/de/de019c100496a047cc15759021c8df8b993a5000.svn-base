@@ -1,0 +1,66 @@
+<?php
+use \ Application\User\Model\FriendModel;
+use \ Application\User\Model\MemberModel;
+use \ Framework\Controller\BaseController;
+use \ Framework\Util\Input;
+
+class Friend extends BaseController
+{
+    function Friend()
+    {
+        parent::__construct();
+    }
+
+    function add()
+    {
+        $input = new Input();
+        $sEmail = $input->post('sEmail');
+        $conditions = array('conditions' => "sEmail='$sEmail'");
+        $memberM = new MemberModel();
+        if ($frd = $memberM->getOne($conditions)) {
+            $friendM = new FriendModel();
+            var_dump($_SESSION);
+            $data = array(
+                'iFriendId'=>$frd['iUserId'],
+                'ibelongTo' => $_SESSION['iUserId']
+            );
+            $id = $friendM->save($data);
+            if (!$id) {
+                $this->jsonResult(-1, '添加失败~');
+            } else {
+                $res = $friendM->getOne($id);
+                $this->jsonResult(0, '添加成功~', $res);
+            }
+        } else {
+            $this->jsonResult(-1, '暂无此用户');
+        }
+
+    }
+
+    function find()
+    {
+        $friendM = new FriendModel();
+        $conditions = array('conditions' => "ibelongTo='{$_SESSION['iUserId']}' and iStatus=0");
+        $res = $friendM->find($conditions);
+        if (!$res) {
+            $this->jsonResult(-1, '加载好友列表失败~');
+        } else {
+            $this->jsonResult(0, '加载成功~', $res);
+        }
+    }
+
+    function delete()
+    {
+        $input = new Input();
+        $friendM = new FriendModel();
+        $iFriendId = $input->post('iFriendId');
+        $conditions = array('conditions' => "iFriendId='{$iFriendId}' and ibelongTo='{$_SESSION['iUserId']}' and iStatus=0");
+        $res = $friendM->delete($conditions,true);
+        if (!$res) {
+            $this->jsonResult(-1, '删除失败~');
+        } else {
+            $this->jsonResult(0, '删除成功~', $res);
+        }
+    }
+
+}

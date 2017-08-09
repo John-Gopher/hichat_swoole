@@ -1,0 +1,58 @@
+<?php
+use \ Application\User\Model\GroupModel;
+use \ Framework\Controller\BaseController;
+use \ Framework\Util\Input;
+class Group extends BaseController
+{
+    function Group(){
+        parent::__construct();
+    }
+    function add(){
+        $input = new Input();
+        $groupM= new GroupModel();
+
+        $data = array(
+            'sGroupName' => $input->post('sGroupName'),
+            'sRemark' => $input->post('sRemark',true),
+            'iCreatorId' => $_SESSION['iUserId'],
+            'iNumMember' => $input->post('iNumMember'),
+            'dtLastActiveTime' => time(),
+            'sMembers' => $input->post('sMembers'),
+        );
+
+        $id = $groupM->save($data);
+        if (!$id) {
+            $this->jsonResult(-1, '群组创建失败~');
+        } else {
+            $res = $groupM->getOne($id);
+            $this->jsonResult(0, '创建成功~', $res);
+        }
+    }
+
+
+    /**
+     * 加载个人群组
+     */
+    function loadGroup(){
+        $input = new Input();
+        $groupM= new GroupModel();
+        $res =  $groupM->db->query("select * from tbgroupuser gu inner join tbgroup g  on  gu.iGroupId=g.iGroupId where iUserId='{$_SESSION['iUserId']}' and iStatus=0");
+        if(!$res){
+            $this->jsonResult(-1,'查找失败~');
+        }else{
+            $this->jsonResult(0,'查找成功~',$res);
+        }
+    }
+    function delete(){
+        $input = new Input();
+        $groupM= new GroupModel();
+        $conditions = array('conditions' => array('iGroupId' => $input->post('iGroupId'),'sGroupName' => $input->post('sGroupName'),'sRemark' => $input->post('sRemark'),'iCreatorId' => $input->post('iCreatorId'),'iNumMember' => $input->post('iNumMember'),'dtLastActiveTime' => $input->post('dtLastActiveTime'),'sMembers' => $input->post('sMembers'),'iStatus' => $input->post('iStatus'),));
+        $res =  $groupM->delete($conditions);
+        if(!$res){
+            $this->jsonResult(-1,'删除失败~');
+        }else{
+            $this->jsonResult(0,'删除成功~',$res);
+        }
+    }
+
+}

@@ -1,0 +1,20 @@
+<?php
+namespace  Application\User\Model;
+use \Framework\Model\BaseModel;
+class FriendModel extends BaseModel
+{
+    var $table  = 'tbfriend';
+    var $prikey = 'iFriendId';
+    var $_name  = 'friend';
+
+    var $_autov = array(
+
+             'ibelongTo' => array(
+                'required'  => true,
+                'min' => 1,
+                'max' => 4294967295,
+                'type' => 'Number',
+             )
+
+    );
+}
