@@ -31,8 +31,6 @@ class Websocket extends HiController
             $this->rd = $redis = new Redis();
             $this->rd->connect('localhost');
             $this->rd->hSet('connect:fd2userid:map',$request->fd,$request->fd);
-            echo 'user_c:';
-            var_dump($this->rd->hGetAll('connect:fd2userid:map'));
             $this->_OutputJSON($request,0, '已经打开连接');
         });
         //监听WebSocket消息事件
@@ -50,14 +48,11 @@ class Websocket extends HiController
                 if (!empty($ret) && !empty($msg['from'])) {
                     $this->rd->hSet('socket:userid2fd:map','from'.$msg['from'],$frame->fd) ;
                     $this->rd->hSet('connect:fd2userid:map',$frame->fd,$msg['from']);
-                    echo 'init:';
-                    var_dump($this->rd->hGetAll('socket:userid2fd:map'));
                     $this->_OutputJSON($frame,0, '初始化完成');
                 }
                 return;
             }
 
-            //temp
             //验证是否是好友
             if (!empty($msg['from']) && !empty($msg['to']) && !empty($msg['content'])) {
                 $model = new BaseModel();
@@ -69,7 +64,6 @@ class Websocket extends HiController
                     //如果好友还在线，则主动推送
                     if (($toFd =  $this->rd->hGet('socket:userid2fd:map','from'.$msg['to'])) && $this->rd->hGet('connect:fd2userid:map',$toFd)) {
                         $res = $db->getRow("SELECT * FROM hichat.tbprivatemsg where iPrivateMsgId='$insertId'");
-                        var_dump($res);
                         $retMsg['data'] = $res;
                         $db->query("UPDATE hichat.tbprivatemsg SET iHasSended=1 WHERE iPrivateMsgId='$insertId'");
                         $retMsg['tome'] =true;
@@ -132,14 +126,11 @@ class Websocket extends HiController
                 if (!empty($ret) && !empty($msg['from'])) {
                     $this->rd->hSet('socket:userid2fd:map','from'.$msg['from'],$frame->fd) ;
                     $this->rd->hSet('connect:fd2userid:map',$frame->fd,$msg['from']);
-                    echo 'init:';
-                    var_dump($this->rd->hGetAll('socket:userid2fd:map'));
                     $this->_OutputJSON($frame,0, '初始化完成');
                 }
                 return;
             }
 
-            //temp
             //验证是否是好友
             if (!empty($msg['from']) && !empty($msg['to']) && !empty($msg['content'])) {
                 $model = new BaseModel();
@@ -150,7 +141,6 @@ class Websocket extends HiController
                     $retMsg['save'] = 'ok';
                     //如果好友还在线，则主动推送
                     $res = $db->getRow("SELECT * FROM hichat.tbprivatemsg where iPrivateMsgId='$insertId'");
-                    var_dump($res);
                     $retMsg['data'] = $res;
                     $db->query("UPDATE hichat.tbprivatemsg SET iHasSended=1 WHERE iPrivateMsgId='$insertId'");
                     if ($toFds =  $this->rd->hGetAll('socket:userid2fd:map')){
